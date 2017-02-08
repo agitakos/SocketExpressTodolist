@@ -1,0 +1,12 @@
+{
+    "name": "ma-super-todolist",
+    "version": "0.1.0",
+    "dependencies": {
+        "express": "~4.11.0",
+        "ejs": "~2.1.4",
+        "ent": "~0.1.0",
+        "socket.io": "~1.2.1"
+    },
+    "author": "Alexandre <alekosfrance@gmail.com>",
+    "description": "Un gestionnaire de todolist avec Socket.io"
+}

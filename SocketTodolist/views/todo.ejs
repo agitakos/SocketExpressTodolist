@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Ma todolist</title>
+        <style>
+            html {
+                font-family: arial;
+            }
+            a {text-decoration: none; color: black;}
+        </style>
+    </head>
+
+    <body>
+    <script src="https://code.jquery.com/jquery-3.1.1.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+        <h1>Super Todolist</h1>
+        <ul id="liste"></ul>
+        <form action="/todo/ajouter/" method="post" id="ajouter">
+            <p>
+                <label for="newtodo">Que dois-je faire ?</label>
+                <input type="text" name="newtodo" id="newtodo" autofocus />
+                <input type="submit" />
+            </p>
+        </form>
+        <script>
+
+        // J'allume Socket
+        var socket = io.connect('http://localhost:8080');
+
+
+        // La Todolist arrive
+        socket.on('todolist', function (todolist) {
+
+            // Si ma page était déja ouverte, je vide le tableau pour éviter les doublons
+            $('#liste').empty();
+            // Je génère la vue de mon tableau Todolist
+            todolist.forEach(function (todo, index) {
+                insertion(todo, index);
+            }); // todolist forEach end
+
+        }); // Fin de l'évènement Todolist
+
+        // Je répercute l'ajout du formulaire aux autres membres
+        $('#ajouter').submit(function() {
+
+            var newtodo = $('#newtodo').val();
+                // Je m'assure d'envoyée une vraie donnée                
+                if (newtodo != '') {
+                socket.emit('newtodo', newtodo);
+            }
+            index = $('li').length;
+            insertion (newtodo, index);
+            $('#newtodo').val('').focus();
+            return false;
+        }); 
+
+            // Ajout d'une ligne
+        socket.on('newtodo', function (datas) {
+
+            console.log ('La donnée <' + datas.newtodo + '> a été ajoutée');
+            insertion(datas.newtodo, datas.index);
+
+        });
+
+        function insertion (todo, index) {
+            $('ul').prepend('<li><a class="suppression" href="#" data-index="' + index + '">✘</a> ' + todo + '</li>');
+        }
+
+        // Suppression d'une ligne
+            $('body').on('click','.suppression', function(){
+            console.log( 'Envoie de l\'index : ' + $(this).data('index') );
+            socket.emit( 'deltodo', $(this).data('index') );
+        });
+
+        </script>
+    </body>
+</html>
