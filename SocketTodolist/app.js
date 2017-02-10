@@ -1,9 +1,9 @@
-var express     = require('express'),
-    http        = require('http'),
-    ent         = require('ent'),
+var express = require('express'),
+    http = require('http'),
+    ent = require('ent'),
     app = express(),
-    server      = http.createServer(app),
-    io    = require('socket.io').listen(server);
+    server = http.createServer(app),
+    io = require('socket.io').listen(server);
  
 var todolist=[],
     index;         
